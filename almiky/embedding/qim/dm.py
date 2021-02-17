@@ -6,9 +6,37 @@ information embedding. IEEE Transactions on
 Information theory, 47(4), 1423-1443.
 '''
 
+import random
+
 import numpy as np
 
 from almiky.embedding import Embedder
+
+
+class RandomDitherValue:
+    '''
+    Random binary dither value
+
+    Generate a random value depending of quantization step
+    in range [-∆/2, ∆/2] using uniform distribution.
+
+    Args:
+        step (float): quantization step
+
+    Returns: dither value.
+
+    Example:
+        >>> from almiky.embedding.qim import RandomDitherValue
+        >>> x = RandomDitherValue(12)
+        >>> x
+        -1.5809799177776949
+    '''
+
+    def __new__(cls, step):
+        '''Initialize x, see help(type(x))'''
+
+        value = random.uniform(-step / 2, step / 2)
+        return value
 
 
 class BinaryDM(Embedder):

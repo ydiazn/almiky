@@ -4,7 +4,7 @@ import random
 from unittest import TestCase
 from unittest.mock import call, MagicMock, Mock
 
-from almiky.embedding.qim.dm import BinaryDM
+from almiky.embedding.qim.dm import BinaryDM, RandomDitherValue
 from almiky.quantization.scalar import UniformQuantizer
 
 
@@ -168,3 +168,11 @@ class BinaryDMEmbeddExtractTest(TestCase):
         sm = emb.embed(x, 1)
         y = add_noise(sm, step)
         self.assertEqual(emb.extract(y), 1)
+
+
+class RandomDitherValueTest(TestCase):
+
+    def test_value(self):
+        value = RandomDitherValue(12)
+
+        self.assertLessEqual(abs(value), 6)
