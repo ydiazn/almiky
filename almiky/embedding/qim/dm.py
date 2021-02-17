@@ -21,7 +21,7 @@ class BinaryDM(Embedder):
 
     Args:
         quantizer (integer): scalar quantizer
-        d0 (float): dither value for m = 0
+        d0 (float): dither value for m = 0, default to None
 
     Constraints:
         ∆: quantization step
@@ -38,6 +38,7 @@ class BinaryDM(Embedder):
 
         self.quantizer = quantizer
 
+        # Set dither values
         d1 = d0 - np.sign(d0 or 1) * quantizer.step / 2
         self.dither_sequence = np.array([d0, d1])
 
