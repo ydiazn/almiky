@@ -11,6 +11,7 @@ import random
 import numpy as np
 
 from almiky.embedding import Embedder
+from almiky.embedding.qim import Dither
 
 
 class RandomDitherValue:
@@ -39,6 +40,44 @@ class RandomDitherValue:
         return value
 
 
+class BinaryDither(Dither):
+    '''
+    Binary indexed dither callback
+
+    Args:
+        index (integer): dither index
+
+    Returns:
+        dither value
+
+    Constraints:
+        ∆: quantization step
+        d0: must be between in [-∆/2, ∆/2]
+    '''
+
+    def __init__(self, step, d0):
+        '''Initialize x, see help(type(instance))'''
+
+        # d0 must be in [-step / 2, step / 2]
+        if abs(d0) > step / 2:
+            raise ValueError
+
+        self.step = step
+        self.d0 = d0
+        self.values = np.empty(2)
+        self.cached = False
+
+    def __call__(self, index):
+        '''See help(type(instance))'''
+
+        if not self.cached:
+            d1 = self.d0 - np.sign(self.d0 or 1) * self.step / 2
+            self.values = np.array([self.d0, d1])
+            self.cached = True
+
+        return self.values[index]
+
+
 class BinaryDM(Embedder):
     '''
     Non coded binary Dither Modulation
@@ -48,40 +87,30 @@ class BinaryDM(Embedder):
     - Host signal: x ∈ R
 
     Args:
-        quantizer (integer): scalar quantizer
-        d0 (float): dither value for m = 0, default to None
+        quantizer (Quantizer): scalar quantizer
+        dither (Dither): binary dither
 
-    Constraints:
-        ∆: quantization step
-        d0: must be between in [-∆/2, ∆/2]
+    Example:
+        Binary dither modulation with ∆=10, d0=-3 and d1=3
 
-    Construction:
-        q = UniformQuantizer(step=10)
-        BinaryDM(q, d0=2.25) => new dither modulation embedder with
-        ∆=10, d0=2.25 and d1=-2.25
+        >>> from almiky.quantization.scalar import UniformQuantizer
+        >>> from almiky.embedding.qim import dm
+        >>> q = UniformQuantizer(step=12)
+        >>> d = dm.BinaryDither(step=12, d0=-3)
+        >>> emb = dm.BinaryDM(q, d)
+        >>> x = 30
+        >>> y = emb.embed(x, 0)
+        >>> y
+        27.0
+        >>> emb.extract(y)
+        0
     '''
 
-    def __init__(self, quantizer, d0):
+    def __init__(self, quantizer, dither):
         '''Initialize x; see help(type(x)) for details'''
 
         self.quantizer = quantizer
-
-        # Set dither values
-        d1 = d0 - np.sign(d0 or 1) * quantizer.step / 2
-        self.dither_sequence = np.array([d0, d1])
-
-    def dither(self, m):
-        '''
-        Return indexed dither value
-
-        Args:
-            m (integer): index (value 0 or 1)
-
-        Returns:
-            float: dither sequence
-        '''
-
-        return self.dither_sequence[m]
+        self.dither = dither
 
     def embed(self, amplitude, bit):
         '''

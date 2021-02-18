@@ -1,17 +1,21 @@
 '''Scalar quantization module'''
 
+from almiky.quantization import Quantizer
 
-class UniformQuantizer:
+
+class UniformQuantizer(Quantizer):
     '''
     Scalar uniform quantizer
 
     Arguments:
-    step: quantization step size (∆)
+        step: quantization step size (∆)
 
     UniformQuantizer(10) => new uniform quantizer with ∆=10
 
-    q = UniformQuatizer(10)
-    q(10) => quatization of value 10
+    Example:
+        >>> q = UniformQuatizer(10)
+        >>> q(12)
+        10
     '''
 
     def __init__(self, step):
@@ -19,4 +23,13 @@ class UniformQuantizer:
         self.step = step
 
     def __call__(self, amplitude):
+        '''
+        Quantize a signal
+
+        Args:
+            amplitude (float): amplitude of signal
+
+        Returns:
+            quantizer value
+        '''
         return self.step * round(amplitude / self.step)

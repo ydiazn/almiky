@@ -7,8 +7,8 @@ class Embedder(ABC):
 
     @abstractmethod
     def embed(amplitude, bit):
-        pass
+        '''Embed a bit in signal'''
 
     @abstractmethod
     def extract(amplitude):
-        pass
+        '''Extract a bit in signal'''
