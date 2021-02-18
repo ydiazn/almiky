@@ -13,6 +13,7 @@ Subpackages
    almiky.hiders
    almiky.metrics
    almiky.moments
+   almiky.quantization
    almiky.steganalysis
    almiky.utils
 
