@@ -17,13 +17,13 @@ def salt_pepper_noise(image, density, max_value=255):
         numpy array: noisy image
     """
 
-    # Generation of salt & pepper noise with desired density
-    mask = np.random.uniform(size=image.shape) < density
-    noise = np.random.choice([-max_value, max_value], image.shape) * mask
+    ones = np.ones(image.shape).astype('int')
+    mask = (np.random.uniform(size=image.shape) < density).astype('int')
+    imask = np.bitwise_xor(mask, ones)
 
-    noisy = image + noise
-    # Ensuring valid noisy image data: value range and data type
-    noisy = np.clip(noisy, 0, max_value).astype(image.dtype)
+    # Generation of salt & pepper
+    noise = np.random.choice([0, 255], image.shape) * mask
+    noisy = (image * imask) + noise
 
     return noisy
 

@@ -25,10 +25,10 @@ class TestSaltAndPepperNoise(TestCase):
         ])
 
         choice_mock.return_value = np.array([
-            [-255, 255, -255, 255],
-            [-255, 255, -255, 255],
-            [-255, 255, -255, 255],
-            [-255, -255, -255, 255]
+            [0, 255, 0, 255],
+            [0, 255, 0, 255],
+            [0, 255, 0, 255],
+            [0, 0, 0, 2551]
         ])
 
         data = np.random.rand(4, 4)
