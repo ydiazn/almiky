@@ -1,6 +1,6 @@
 # Almiky
 
-## Python library for data hiding in images
+## Python library for image data hiding
 
 ### Download and active enviroment
 
