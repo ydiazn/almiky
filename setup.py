@@ -14,7 +14,7 @@ setup(
         'scipy==1.5.4',
         'mpmath==1.1.0',
         'imageio==2.9.0',
-        'opencv-python==4.4.0.46'
+        #'opencv-python==4.4.0.46'
     ],
     zip_safe=False
 )
