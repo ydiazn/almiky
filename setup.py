@@ -10,11 +10,10 @@ setup(
     license='LICENSE.txt',
     packages=find_packages(),
     install_requires=[
-        'numpy==1.19.4',
-        'scipy==1.5.4',
-        'mpmath==1.1.0',
-        'imageio==2.9.0',
-        #'opencv-python==4.4.0.46'
+        'numpy==1.24.3',
+        'scipy==1.10.1',
+        'mpmath==1.3.0',
+        'imageio==2.28.1',
     ],
     zip_safe=False
 )
