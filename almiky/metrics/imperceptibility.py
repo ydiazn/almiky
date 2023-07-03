@@ -32,3 +32,33 @@ def psnr(cover_array, stego_array, max=255):
     '''
     RMSE = mse(cover_array, stego_array) or 1 / cover_array.size
     return 10 * log10(max ** 2 / RMSE) if RMSE else 100
+
+
+def uiqi(cover_array, stego_array, axis=(0, 1)):
+    '''
+    Universal Image Quality Index
+
+    Arguments:
+    cover_array -- array containing cover data
+    stego_array -- array containing stego data
+    axis -- axes along which the uiqi is computed.
+        The default is (0, 1).
+
+    Usage:
+    uiqi([[2, 6], [3, 2]], [[6, 2], [8, 5]])
+    '''
+
+    if cover_array.shape != stego_array.shape:
+        raise ValueError('Cover and watermak/stego work have different shape')
+
+    Mc = np.mean(cover_array, axis)
+    Ms = np.mean(stego_array, axis)
+    Mc2 = np.emath.power(Mc, 2)
+    Ms2 = np.emath.power(Ms, 2)
+    Vc = np.var(cover_array, axis, ddof=1)
+    Vs = np.var(stego_array, axis, ddof=1)
+    size = np.prod([np.size(cover_array, axis) for axis in axis])
+    Scs = np.sum((cover_array - Mc) * (stego_array - Ms), axis) / (size - 1)
+    index = (4 * Scs * Mc * Ms) / ((Vc + Vs) * (Mc2 + Ms2))
+
+    return np.mean(index)
